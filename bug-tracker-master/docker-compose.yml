@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  mysql:
+    image: mysql:latest
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=bug_tracker
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./src/main/java/resources/data.sql:/docker-entrypoint-initdb.d/10-init.sql
+      - .data:/var/lib/mysql
+  app:
+    depends_on:
+      - mysql
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - .m2:/root/.m2
